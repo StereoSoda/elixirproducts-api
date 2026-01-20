@@ -14,11 +14,6 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.AddProduc
   alias ProductsApi.Domain.UseCase.AddProducts.AddProductsUseCase
   alias ProductsApi.Infrastructure.DrivenAdapters.Ets.Products.Application.ProductRepositoryAdapter
 
-  @success_msg "Petición procesada exitosamente"
-  @internal_msg "Hay un error interno en el sistema"
-  @bad_msg "Solicitud inválida"
-  @conflict_msg "El producto ya existe"
-
   def handle(conn) do
     try do
       ctx = HeaderContextExtractor.extract_or_throw(conn)
@@ -27,33 +22,19 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.AddProduc
       cmd = %Command{payload: payload, context: ctx}
       :ok = AddProductsUseCase.execute(cmd, ProductRepositoryAdapter)
 
+      body = ResponseBuilder.success_add_products(ctx.message_id)
+
       conn
       |> put_resp_header(HeaderContextExtractor.x_request_id_header(), ctx.x_request_id)
       |> put_resp_content_type("application/json")
-      |> send_resp(
-        201,
-        Jason.encode!(%{meta: %{messageId: ctx.message_id}, data: %{message: @success_msg}})
-      )
+      |> send_resp(201, Jason.encode!(body))
     rescue
-      e in [BusinessException] ->
+      e in BusinessException ->
         code = e.code
         ctx2 = e.context
 
         status = ErrorMapper.status(code)
-
-        msg =
-          case code do
-            :er400 -> @bad_msg
-            :er409 -> @conflict_msg
-            _ -> @internal_msg
-          end
-
-        body =
-          ResponseBuilder.error(
-            %{messageId: ctx2.message_id},
-            code |> Atom.to_string() |> String.upcase(),
-            msg
-          )
+        body = ResponseBuilder.error(ctx2.message_id, ErrorMapper.code_str(code), ErrorMapper.message(code))
 
         conn
         |> put_resp_header(HeaderContextExtractor.x_request_id_header(), ctx2.x_request_id)
@@ -61,10 +42,12 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.AddProduc
         |> send_resp(status, Jason.encode!(body))
 
       _ ->
-        xrid = UUID.uuid4()
-        mid = UUID.uuid4()
+        # Si algo no controlado revienta, pero igual devolvemos ER500 con IDs del request si existen.
+        # Si por alguna razón no existen, generamos.
+        xrid = get_req_header(conn, HeaderContextExtractor.x_request_id_header()) |> List.first() || UUID.uuid4()
+        mid = get_req_header(conn, "message-id") |> List.first() || UUID.uuid4()
 
-        body = ResponseBuilder.error(%{messageId: mid}, "ER500", @internal_msg)
+        body = ResponseBuilder.error(mid, "ER500", "Hay un error interno en el sistema")
 
         conn
         |> put_resp_header(HeaderContextExtractor.x_request_id_header(), xrid)

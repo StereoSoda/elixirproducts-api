@@ -17,6 +17,7 @@ defmodule ProductsApi.Infrastructure.EntryPoints.OpenApi.ApiSpec do
   @impl OpenApiSpex.OpenApi
   def spec do
     %OpenApi{
+      openapi: "3.0.3",
       servers: [%Server{url: "/"}],
       info: %Info{
         title: "Products API",
