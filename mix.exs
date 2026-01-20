@@ -22,7 +22,8 @@ defmodule ProductsApi.MixProject do
     [
       {:plug_cowboy, "~> 2.7"},
       {:jason, "~> 1.4"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:open_api_spex, "~> 3.21"}
     ]
   end
 end
