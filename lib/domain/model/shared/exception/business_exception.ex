@@ -1,22 +1,21 @@
 defmodule ProductsApi.Domain.Model.Shared.Exception.BusinessException do
-  @moduledoc """
-  Excepción de negocio con código y contexto (message_id / x_request_id).
-  """
+  @moduledoc false
 
-  defexception [:code, :context, :message]
+  defexception [:code, :context, :reason, :field]
 
   @type t :: %__MODULE__{
           code: atom(),
-          context: term(),
-          message: String.t() | nil
+          context: any(),
+          reason: atom() | nil,
+          field: String.t() | nil
         }
 
-  # Helper para mantener el estilo que vienes usando: BusinessException.new(:er400, ctx)
-  def new(code, context, message \\ nil) when is_atom(code) do
-    %__MODULE__{code: code, context: context, message: message}
+  @impl true
+  def message(%__MODULE__{code: code, reason: reason, field: field}) do
+    "BusinessException code=#{inspect(code)} reason=#{inspect(reason)} field=#{inspect(field)}"
   end
 
-  @impl true
-  def message(%__MODULE__{message: nil, code: code}), do: Atom.to_string(code)
-  def message(%__MODULE__{message: msg}), do: msg
+  def new(code, ctx, reason \\ nil, field \\ nil) do
+    %__MODULE__{code: code, context: ctx, reason: reason, field: field}
+  end
 end

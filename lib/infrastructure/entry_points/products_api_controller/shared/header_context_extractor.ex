@@ -1,4 +1,6 @@
 defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.HeaderContextExtractor do
+  @moduledoc false
+
   alias ProductsApi.Domain.Model.Shared.Cqrs.ContextData
   alias ProductsApi.Domain.Model.Shared.Exception.BusinessException
 
@@ -12,12 +14,21 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.He
     mid = get_req_header(conn, @message_id)
     rid = get_req_header(conn, @x_request_id)
 
-    if valid_uuid?(mid) and valid_uuid?(rid) do
-      %ContextData{message_id: mid, x_request_id: rid}
-    else
-      # genera ids para el contexto del error
-      ctx = %ContextData{message_id: UUID.uuid4(), x_request_id: UUID.uuid4()}
-      raise(BusinessException.new(:er400, ctx))
+    cond do
+      not valid_uuid?(mid) and not valid_uuid?(rid) ->
+        ctx = new_error_ctx()
+        raise(BusinessException.new(:er400, ctx, :invalid_headers, "#{@message_id},#{@x_request_id}"))
+
+      not valid_uuid?(mid) ->
+        ctx = new_error_ctx()
+        raise(BusinessException.new(:er400, ctx, :invalid_header, @message_id))
+
+      not valid_uuid?(rid) ->
+        ctx = new_error_ctx()
+        raise(BusinessException.new(:er400, ctx, :invalid_header, @x_request_id))
+
+      true ->
+        %ContextData{message_id: mid, x_request_id: rid}
     end
   end
 
@@ -34,5 +45,9 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.He
       {:ok, _} -> true
       _ -> false
     end
+  end
+
+  defp new_error_ctx do
+    %ContextData{message_id: UUID.uuid4(), x_request_id: UUID.uuid4()}
   end
 end

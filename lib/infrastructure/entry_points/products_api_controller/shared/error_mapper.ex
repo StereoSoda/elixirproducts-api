@@ -11,6 +11,7 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.Er
   def code_str(:er500), do: "ER500"
   def code_str(_), do: "ER500"
 
+  # Mensajes EXACTOS del reto (los públicos)
   def message(:er400), do: "Hay un error técnico, revisar datos ingresados"
   def message(:er409), do: "Uno de los productos ingresados ya existe en el sistema"
   def message(:er500), do: "Hay un error interno en el sistema"

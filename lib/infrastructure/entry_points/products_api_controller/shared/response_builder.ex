@@ -1,29 +1,27 @@
 defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.ResponseBuilder do
   @moduledoc false
 
-  alias ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.DateTimeProvider
-
-  def success_add_products(message_id) do
+  def success(message_id, creation_date, msg) do
     %{
       "meta" => %{
-        "creationDate" => DateTimeProvider.now_formatted(),
+        "creationDate" => creation_date,
         "message-id" => message_id
       },
       "data" => %{
-        "message" => "Los productos fueron guardados exitosamente"
+        "message" => msg
       }
     }
   end
 
-  def error(message_id, code, message) do
+  def error(message_id, execution_date, code, msg) do
     %{
       "meta" => %{
-        "executionDate" => DateTimeProvider.now_formatted(),
+        "executionDate" => execution_date,
         "message-id" => message_id
       },
       "error" => %{
         "code" => code,
-        "message" => message
+        "message" => msg
       }
     }
   end

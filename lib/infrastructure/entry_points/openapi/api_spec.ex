@@ -23,7 +23,6 @@ defmodule ProductsApi.Infrastructure.EntryPoints.OpenApi.ApiSpec do
         title: "Products API",
         version: "1.0.0"
       },
-      # En 3.22.x esto es un map normal con PathItems; NO uses Paths.from_paths/1
       paths: %{
         "/addProducts" => %PathItem{
           post: add_products_operation()

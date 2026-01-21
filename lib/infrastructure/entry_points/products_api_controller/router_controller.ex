@@ -3,8 +3,6 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.RouterCon
   import Plug.Conn
 
   alias ProductsApi.Infrastructure.EntryPoints.ProductsApiController.AddProducts.AddProductsHandler
-  alias ProductsApi.Infrastructure.DrivenAdapters.Ets.Products.Infra.EtsStore
-
   alias ProductsApi.Infrastructure.EntryPoints.OpenApi.ApiSpec
 
   plug(Plug.Logger, log: :info)
@@ -36,7 +34,6 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.RouterCon
   end
 
   post "/addProducts" do
-    :ok = EtsStore.init!()
     AddProductsHandler.handle(conn)
   end
 
