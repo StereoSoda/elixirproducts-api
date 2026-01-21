@@ -16,7 +16,7 @@ defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.AddProduc
           }
 
         _other ->
-          # Dejamos un marcador inválido para que el usecase dispare ER400 con reason invalid_products
+          # Dejo un marcador inválido para que el usecase dispare ER400 con reason invalid_products
           :invalid_product_item
       end)
 

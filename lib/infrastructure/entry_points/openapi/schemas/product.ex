@@ -8,14 +8,8 @@ defmodule ProductsApi.Infrastructure.EntryPoints.OpenApi.Schemas.Product do
     properties: %{
       name: %Schema{type: :string},
       type: %Schema{type: :string},
-      quantity: %Schema{
-        type: :string,
-        description: "Cantidad (numérico representado como string)"
-      },
-      price: %Schema{
-        type: :string,
-        description: "Precio (numérico representado como string)"
-      },
+      quantity: %Schema{type: :string},
+      price: %Schema{type: :string},
       currency: %Schema{type: :string}
     },
     required: [:name, :type, :quantity, :price, :currency]
