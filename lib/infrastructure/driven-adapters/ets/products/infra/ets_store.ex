@@ -14,9 +14,7 @@ defmodule ProductsApi.Infrastructure.DrivenAdapters.Ets.Products.Infra.EtsStore 
     end
   end
 
-  def exists?(key) do
-    :ets.lookup(@table, key) != []
-  end
+  def exists?(key), do: :ets.lookup(@table, key) != []
 
   def put(key, value) do
     :ets.insert(@table, {key, value})

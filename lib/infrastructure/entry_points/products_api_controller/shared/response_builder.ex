@@ -1,4 +1,28 @@
 defmodule ProductsApi.Infrastructure.EntryPoints.ProductsApiController.Shared.ResponseBuilder do
-  def ok(meta, data), do: %{meta: meta, data: data}
-  def error(meta, code, msg), do: %{meta: meta, error: %{code: code, message: msg, details: []}}
+  @moduledoc false
+
+  def success(message_id, creation_date, msg) do
+    %{
+      "meta" => %{
+        "creationDate" => creation_date,
+        "message-id" => message_id
+      },
+      "data" => %{
+        "message" => msg
+      }
+    }
+  end
+
+  def error(message_id, execution_date, code, msg) do
+    %{
+      "meta" => %{
+        "executionDate" => execution_date,
+        "message-id" => message_id
+      },
+      "error" => %{
+        "code" => code,
+        "message" => msg
+      }
+    }
+  end
 end
