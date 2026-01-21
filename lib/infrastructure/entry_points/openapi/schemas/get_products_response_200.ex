@@ -11,9 +11,9 @@ defmodule ProductsApi.Infrastructure.EntryPoints.OpenApi.Schemas.GetProductsResp
         type: :object,
         properties: %{
           executionDate: %Schema{type: :string},
-          messageId: %Schema{type: :string, format: :uuid}
+          "message-id": %Schema{type: :string, format: :uuid}
         },
-        required: [:executionDate, :messageId]
+        required: [:executionDate, :"message-id"]
       },
       data: %Schema{
         type: :object,
