@@ -4,7 +4,7 @@ defmodule ProductsApi.Domain.Model.AddProducts.Validate.ProductValidator do
   alias ProductsApi.Domain.Model.Shared.Common.Model.ProductKeyPolicy
 
   @types_allowed ["tecnologia", "moda", "alimento"]
-  @currency_allowed ["cop", "usd", "eur"]
+  @currency_allowed ["cop"]
 
   def validate!(product, ctx) do
     name = product.name |> ProductKeyPolicy.normalize()

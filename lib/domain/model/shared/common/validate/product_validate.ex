@@ -6,7 +6,7 @@ defmodule ProductsApi.Domain.Model.Shared.Common.Validate.ProductValidate do
   alias ProductsApi.Domain.Model.AddProducts.Model.Product
 
   @types_allowed ["Tecnología", "Moda", "Alimento"]
-  @currencies_allowed ["COP", "USD", "EUR"]
+  @currencies_allowed ["COP"]
 
   @spec validate!(Product.t(), any()) :: :ok | no_return()
   def validate!(%Product{} = p, ctx) do
@@ -79,8 +79,6 @@ defmodule ProductsApi.Domain.Model.Shared.Common.Validate.ProductValidate do
 
   defp integer_positive?(_), do: false
 
-  # price: si el reto lo quiere como entero, esto está perfecto.
-  # Si lo quisieras decimal, te dejo variante abajo.
   defp number_positive?(v) when is_integer(v), do: v > 0
   defp number_positive?(v) when is_float(v), do: v > 0
 
@@ -94,10 +92,6 @@ defmodule ProductsApi.Domain.Model.Shared.Common.Validate.ProductValidate do
   end
 
   defp number_positive?(_), do: false
-
-  # ----------------
-  # Helpers
-  # ----------------
 
   defp blank?(v), do: is_nil(v) or (is_binary(v) and String.trim(v) == "")
 

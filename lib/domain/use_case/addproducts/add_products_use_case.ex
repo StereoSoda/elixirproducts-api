@@ -30,10 +30,6 @@ defmodule ProductsApi.Domain.UseCase.AddProducts.AddProductsUseCase do
     end
   end
 
-  # --------------------
-  # Payload extraction
-  # --------------------
-
   defp extract_products!(%AddProductsPayload{products: products}, ctx) when is_list(products) do
     cond do
       products == [] ->

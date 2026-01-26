@@ -209,7 +209,6 @@ defmodule ProductsApi.GetProductsIntegrationTest do
   test "500 cuando ocurre un error desconocido (forzado borrando ETS)" do
     _ = add_products!([product_payload()])
 
-    # Forzamos error: eliminamos la tabla antes del GET
     :ets.delete(EtsStore.table())
 
     mid = uuid()
